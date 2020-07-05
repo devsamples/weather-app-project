@@ -1,10 +1,60 @@
 import React, {Component} from 'react';
 
+// CSS
 import './WIassets/WeatherForm.css';
 
 class WeatherForm extends Component {
+  constructor (props){
+    super(props);
+    // this.items = [
+    //   "alalal",
+    //   "alalal",
+    //   "alalal",
+    //   "alalal",
+    //   "jnewrjjwer",
+    //   "sasdas"
+    // ];
+
+    this.state = {
+      suggestions: [],
+      text: ""
+    };
+
+  }
+
+  onTextChanged = e => {
+    const {items} = this.props;
+    const value = e.target.value;
+    let suggestions = [];
+    if (value.length > 0){
+      const regex = new RegExp(`^${value}`,'i');
+      suggestions = items.sort().filter(v => regex.test(v));
+    }
+    // this.setState({suggestions});
+    this.setState({suggestions, text: value});
+  }
+
+  suggestionSelected = value => {
+    this.setState({
+      text: value,
+      suggestions: []
+    })
+  }
+
+  renderSuggestions = e => {
+    const {suggestions} = this.state;
+    if (suggestions.length === 0){ return null; }
+    return (
+      <div className="position-relative">
+        <ul className="auto-li text-muted px-4 position-absolute w-100">
+          {suggestions.map((item,i) => <li onClick={() => this.suggestionSelected(item)} key={i}>{item}</li>)}
+        </ul>
+      </div>
+    );
+  }
 
   render(){
+    const {text} = this.state;
     return (
       <header className="p-4 d-flex align-items-center">
         <div className="overlay"></div>
@@ -27,11 +77,12 @@ class WeatherForm extends Component {
 
                   <div className="form-row">
 
-                    <div className="col-12 col-md-6 mb-2 mb-md-0">
-                      <input type="text" name="ciudad" className="form-control form-control-lg" placeholder="Ciudad" />
+                    <div className="col-12 col-md-6 mb-2 mb-md-0 auto-ul">
+                      <input type="text" name="ciudad" className="form-control form-control-lg" placeholder="Ciudad"/>
                     </div>
-                    <div className="col-12 col-md-3 mb-2 mb-md-0">
-                      <input type="text" name="pais" className="form-control form-control-lg" placeholder="País" />
+                    <div className="col-12 col-md-3 mb-2 mb-md-0 auto-ul">
+                      <input type="text" name="pais" className="form-control form-control-lg" placeholder="País" onChange={this.onTextChanged} value={text}/>
+                      {this.renderSuggestions()}
                     </div>
                     <div className="col-12 col-md-3">
                       <button type="submit" className="btn btn-block btn-lg btn-primary">Buscar!</button>

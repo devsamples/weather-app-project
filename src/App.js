@@ -7,6 +7,9 @@ import WeatherMap from './components/WeatherMap';
 
 import {WEATHER_KEY} from './keys';
 
+// JSON Countries
+import countries from './countries';
+
 class App extends Component {
 
   state = {
@@ -32,8 +35,8 @@ class App extends Component {
 
     // get form inputs
     const {ciudad,pais} = e.target.elements;
-    let ciudadVal = ciudad.value;
-    let paisVal = pais.value;
+    let ciudadVal = ciudad.value.trim();
+    let paisVal = pais.value.trim();
 
     if (ciudadVal && paisVal){
 
@@ -75,7 +78,7 @@ class App extends Component {
   render(){
     return (
       <div>
-        <WeatherForm getWeather={this.getWeather}/>
+        <WeatherForm items={countries} getWeather={this.getWeather}/>
         <WeatherInfo {...this.state}/>
         <WeatherMap lat={this.state.lat} lon={this.state.lon}/>
       </div>
